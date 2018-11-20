@@ -4,11 +4,16 @@
   "description": "Directory synchronization service",
   "main": "index.js",
   "dependencies": {
-    "metasync": "^0.3.30"
+    "eslint-plugin-prettier": "^3.0.0",
+    "istanbul": "^0.4.5",
+    "metasync": "^0.3.30",
+    "metatests": "^0.2.4"
   },
   "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "eslint .",
+    "test": "eslint . && metatests test/",
+    "cover": "istanbul cover --include-all-sources test/* && istanbul check-coverage"
   },
   "repository": {
     "type": "git",

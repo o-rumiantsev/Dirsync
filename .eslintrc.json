@@ -1,0 +1,9 @@
+{
+  "extends": ["prettier"],
+  "parserOptions": { "ecmaVersion": 2017 },
+  "rules": {
+    "no-extra-semi": "error",
+    "semi": [2, "always"],
+    "camelcase": "off"
+  }
+}
