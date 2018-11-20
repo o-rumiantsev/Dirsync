@@ -1,0 +1,23 @@
+{
+  "name": "dirsync",
+  "version": "0.0.1",
+  "description": "Directory synchronization service",
+  "main": "index.js",
+  "dependencies": {
+    "metasync": "^0.3.30"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/o-rumiantsev/Dirsync.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/o-rumiantsev/Dirsync/issues"
+  },
+  "homepage": "https://github.com/o-rumiantsev/Dirsync#readme"
+}
