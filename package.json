@@ -5,15 +5,13 @@
   "main": "index.js",
   "dependencies": {
     "eslint-plugin-prettier": "^3.0.0",
-    "istanbul": "^0.4.5",
     "metasync": "^0.3.30",
     "metatests": "^0.2.4"
   },
   "devDependencies": {},
   "scripts": {
     "lint": "eslint .",
-    "test": "eslint . && metatests test/",
-    "cover": "istanbul cover --include-all-sources test/* && istanbul check-coverage"
+    "test": "eslint . && metatests test/"
   },
   "repository": {
     "type": "git",
