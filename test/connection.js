@@ -57,3 +57,30 @@ metatests.test('connection receive multiple packets', test => {
   test.end();
 });
 
+metatests.test('connection send packets', test => {
+  const tr1 = new EventEmitter();
+  const tr2 = new EventEmitter();
+
+  tr1.write = tr2.emit.bind(tr2, 'data');
+
+  const conn1 = new Connection(tr1);
+  const conn2 = new Connection(tr2);
+  const packets = [];
+  conn2.on('packet', packet => packets.push(packet));
+
+  conn1.send({ field: '1' });
+  conn1.send({ field: '2' });
+  conn1.send({ field: '3' });
+  conn1.send({ field: '4' });
+  conn1.send({ field: '5' });
+
+  test.strictSame(packets, [
+    { id: 1, length: 13, payload: Buffer.from('{"field":"1"}') },
+    { id: 2, length: 13, payload: Buffer.from('{"field":"2"}') },
+    { id: 3, length: 13, payload: Buffer.from('{"field":"3"}') },
+    { id: 4, length: 13, payload: Buffer.from('{"field":"4"}') },
+    { id: 5, length: 13, payload: Buffer.from('{"field":"5"}') },
+  ]);
+
+  test.end();
+});
