@@ -6,7 +6,8 @@ const metasync = require('metasync');
 const { join } = require('path');
 const Server = require('../lib/server');
 const Connection = require('../lib/connection');
-const Watcher = require('../lib/watcher');
+const { inspectDirectory } = require('../lib/watcher/utils');
+const { readFileSubsystem } = require('../lib/fs-interface');
 
 const dir = join(__dirname, 'fixtures/watcher');
 const connectionOptions = {
@@ -80,6 +81,14 @@ serverTest.test('Server on sync', test => {
     connection.send({ event: 'sync' }, cb);
   const onSync = ({ connection }, cb) =>
     connection.on('message', message => cb(null, { syncMessage: message }));
+  const readSubsystem = (context, cb) =>
+    readFileSubsystem(dir, (err, fileSubsystem) => {
+      if (err) {
+        cb(err);
+        return;
+      }
+      cb(null, { fileSubsystem });
+    });
 
   server.on('connection', conn => serverEvents.push('connection'));
   server.on('sync', () => serverEvents.push('sync'));
@@ -87,7 +96,7 @@ serverTest.test('Server on sync', test => {
   const series = metasync([
     startServer,
     createConnection,
-    [[requestSync, onSync]],
+    [[requestSync, onSync, readSubsystem]],
     closeConnection,
     stopServer,
   ]);
@@ -96,8 +105,9 @@ serverTest.test('Server on sync', test => {
     { connection, server },
     (err, data) => {
       test.error(err);
+      const { fileSubsystem } = data;
       test.strictSame(serverEvents, ['connection', 'sync']);
-      test.strictSame(data.syncMessage, { event: 'sync' });
+      test.strictSame(data.syncMessage, { event: 'sync', data: fileSubsystem });
       test.end();
     }
   );
@@ -135,7 +145,7 @@ serverTest.test('Server on inspect', test => {
     (err, data) => {
       test.error(err);
 
-      const files = Watcher.inspectDirectory(dir);
+      const files = inspectDirectory(dir);
       const expectedInspectMessage = { event: 'inspect', data: files };
 
       test.strictSame(serverEvents, ['connection', 'inspect']);
