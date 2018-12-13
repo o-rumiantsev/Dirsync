@@ -87,7 +87,8 @@ serverTest.test('Server on sync', test => {
         cb(err);
         return;
       }
-      cb(null, { fileSubsystem });
+      const processedFS = JSON.parse(JSON.stringify(fileSubsystem));
+      cb(null, { fileSubsystem: processedFS });
     });
 
   server.on('connection', conn => serverEvents.push('connection'));
