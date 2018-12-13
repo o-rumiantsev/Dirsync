@@ -5,10 +5,10 @@ const metasync = require('metasync');
 const { join } = require('path');
 const Server = require('../lib/server');
 const Client = require('../lib/client');
-const Watcher = require('../lib/watcher');
+const { inspectDirectory } = require('../lib/watcher/utils');
 
 const url = 'tcp://localhost:9001';
-const dir = join(__dirname, 'fixtures');
+const dir = join(__dirname, 'fixtures/watcher');
 const clientTest = metatests.test('Client tests');
 
 clientTest.test('Client connect and stop', test => {
@@ -75,7 +75,7 @@ clientTest.test('Client request sync', test => {
       events.push('sync');
       cb();
     });
-    client.sync();
+    client.sync({ targetDir: './fixtures/sync', sourceDir: dir });
   };
 
   server.on('start', () => events.push('started'));
@@ -129,7 +129,7 @@ clientTest.test('Client request inspect', test => {
     (err, context) => {
       test.error(err);
 
-      const expectedData = Watcher.inspectDirectory(dir);
+      const expectedData = inspectDirectory(dir);
 
       test.strictSame(events, expectedEvents);
       test.strictSame(context.data, expectedData);

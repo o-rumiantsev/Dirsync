@@ -237,5 +237,5 @@ watcherTest.test('Watcher handle dir create', test => {
 
     watcher.unwatch();
     test.end();
-  })
+  });
 });
