@@ -59,7 +59,7 @@ watcherTest.test('Watcher handle file update', test => {
   watcher.watch();
   watcher.on('update', (filename, data) => events.push([filename, data]));
 
-  const update = (path, data, cb) => fs.append(join(dir, path), data, cb);
+  const update = (path, data, cb) => fs.update(join(dir, path), data, cb);
 
   sequential([
     cb => setTimeout(cb, 50),
