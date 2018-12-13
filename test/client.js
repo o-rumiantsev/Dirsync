@@ -8,14 +8,15 @@ const Client = require('../lib/client');
 const { inspectDirectory } = require('../lib/watcher/utils');
 
 const url = 'tcp://localhost:9001';
-const dir = join(__dirname, 'fixtures/watcher');
+const targetDir = join(__dirname, 'fixtures/sync');
+const sourceDir = join(__dirname, 'fixtures/watcher');
 const clientTest = metatests.test('Client tests');
 
 clientTest.test('Client connect and stop', test => {
   const expectedEvents = ['started', 'connected', 'disconnected', 'stopped'];
   const events = [];
   const client = new Client();
-  const server = new Server({ port: 9001, dir });
+  const server = new Server({ port: 9001, dir: sourceDir });
 
   const startServer = cb => server.start(cb);
   const stopServer = cb => server.stop(cb);
@@ -52,7 +53,7 @@ clientTest.test('Client request sync', test => {
     ['started', 'connected', 'sync', 'disconnected', 'stopped'];
   const events = [];
   const client = new Client();
-  const server = new Server({ port: 9001, dir });
+  const server = new Server({ port: 9001, dir: sourceDir });
 
   const startServer = cb => server.start(cb);
   const stopServer = cb => server.stop(cb);
@@ -75,7 +76,7 @@ clientTest.test('Client request sync', test => {
       events.push('sync');
       cb();
     });
-    client.sync('./fixtures/sync', dir);
+    client.sync(targetDir, sourceDir);
   };
 
   server.on('start', () => events.push('started'));
@@ -96,7 +97,7 @@ clientTest.test('Client request inspect', test => {
     ['started', 'connected', 'inspect', 'disconnected', 'stopped'];
   const events = [];
   const client = new Client();
-  const server = new Server({ port: 9001, dir });
+  const server = new Server({ port: 9001, dir: sourceDir });
 
   const startServer = cb => server.start(cb);
   const stopServer = cb => server.stop(cb);
@@ -129,7 +130,7 @@ clientTest.test('Client request inspect', test => {
     (err, context) => {
       test.error(err);
 
-      const expectedData = inspectDirectory(dir);
+      const expectedData = inspectDirectory(sourceDir);
 
       test.strictSame(events, expectedEvents);
       test.strictSame(context.data, expectedData);
@@ -137,4 +138,3 @@ clientTest.test('Client request inspect', test => {
     }
   );
 });
-
