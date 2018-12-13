@@ -75,7 +75,7 @@ clientTest.test('Client request sync', test => {
       events.push('sync');
       cb();
     });
-    client.sync({ targetDir: './fixtures/sync', sourceDir: dir });
+    client.sync('./fixtures/sync', dir);
   };
 
   server.on('start', () => events.push('started'));
