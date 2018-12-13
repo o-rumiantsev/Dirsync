@@ -200,11 +200,12 @@ watcherTest.test('Watcher handle create file with initial data', test => {
 });
 
 watcherTest.test('Watcher handle dir create', test => {
-  const events = [];
+  const revents = [];
+  const cevents = [];
   const watcher = new Watcher(dir, { lifetimeWatchInterval: 1 });
   watcher.watch();
-  watcher.on('create', de => events.push(['create', de.name]));
-  watcher.on('remove', de => events.push(['remove', de.name]));
+  watcher.on('create', de => cevents.push(['create', de.name]));
+  watcher.on('remove', de => revents.push(['remove', de.name]));
 
   const createDir = (path, cb) => fs.create.dir(join(dir, path), cb);
   const remove = (path, cb) => fs.remove.dir.recursive(join(dir, path), cb);
@@ -225,6 +226,11 @@ watcherTest.test('Watcher handle dir create', test => {
     cb => setTimeout(cb, 50),
   ], err => {
     test.error(err);
+
+    cevents.sort((e1, e2) => e2[1] > e1[1] ? -1 : 1);
+    revents.sort((e1, e2) => e2[1] > e1[1] ? -1 : 1);
+
+    const events = cevents.concat(revents);
 
     test.strictSame(events, [
       ['create', join(dir, 'subdir1')],
