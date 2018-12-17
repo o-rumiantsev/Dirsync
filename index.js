@@ -10,7 +10,7 @@ const Watcher = require('./lib/watcher');
 // Returns: <Client>
 const connect = (url, cb) => {
   const client = new Client();
-  client.connect(utl);
+  client.connect(url);
   if (cb) client.on('connect', cb);
   return client;
 };

@@ -1,1 +1,1 @@
-# Directory for `sync` event tests
+### Directory for `Watcher` tests
