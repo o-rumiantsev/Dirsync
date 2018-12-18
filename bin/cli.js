@@ -42,7 +42,7 @@ if (method === 'sync') {
   const { port, hostname: host } = url ? parse(url) : {};
   const shareOptions = Object.assign(options, { port, host });
   const server = share(shareOptions);
-  server.start(() => console.log('Sync started'));
+  server.start(() => console.log(`Sync started on ${server.address}`));
   server.on('error', err => console.error(err));
   server.on('connection', (clientId, client) => {
     console.log(`Client ${clientId} connected`);
