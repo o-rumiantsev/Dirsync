@@ -46,10 +46,10 @@ if (method === 'sync') {
   server.on('error', err => console.error(err));
   server.on('connection', connection => {
     console.log(`Client ${connection.address} connected`);
-    client.on('close', () =>
+    connection.on('close', () =>
       console.log(`Client ${connection.address} disconnected`)
     );
-    client.on('message', ({ event }) =>
+    connection.on('message', ({ event }) =>
       console.log(`Client ${connection.address} requested ${event}`)
     );
   });
