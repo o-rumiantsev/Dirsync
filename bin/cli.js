@@ -44,12 +44,14 @@ if (method === 'sync') {
   const server = share(shareOptions);
   server.start(() => console.log(`Sync started on ${server.address}`));
   server.on('error', err => console.error(err));
-  server.on('connection', (clientId, client) => {
-    console.log(`Client ${clientId} connected`);
-    client.on('close',
-      () => console.log(`Client ${clientId} disconnected`));
-    client.on('message',
-      ({ event }) => console.log(`Client ${clientId} requested ${event}`));
+  server.on('connection', connection => {
+    console.log(`Client ${connection.address} connected`);
+    client.on('close', () =>
+      console.log(`Client ${connection.address} disconnected`)
+    );
+    client.on('message', ({ event }) =>
+      console.log(`Client ${connection.address} requested ${event}`)
+    );
   });
 }
 
