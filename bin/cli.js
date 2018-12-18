@@ -3,14 +3,21 @@
 const { parse } = require('url');
 const { connect, share } = require('../');
 
+const METHODS = ['inspect', 'sync', 'share'];
 const keyMap = {
   '-i': 'ignore',
   '-d': 'dir'
 };
 
 const [method, ...argv] = process.argv.slice(2);
+
+if (!METHODS.includes(method)) {
+  console.error(`Unknown method ${method}`);
+  return;
+}
+
 let url = argv.find(arg => arg.match(/^(tcp:\/\/)?[\w\-\.]+:\d+/));
-url = url.match(/^tcp:\/\//) ? url : `tcp://${url}`;
+if (url) url = url.match(/^tcp:\/\//) ? url : `tcp://${url}`;
 const options = argv.reduce(
   (options, key, index) => {
     if (key.match(/-i|-d/)) options[keyMap[key]] = argv[index + 1];
