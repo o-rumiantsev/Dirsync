@@ -1,4 +1,4 @@
-'use strcit';
+'use strict';
 
 const Client = require('./lib/client');
 const Server = require('./lib/server');
