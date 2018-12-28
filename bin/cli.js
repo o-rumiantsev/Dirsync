@@ -26,6 +26,12 @@ const options = argv.reduce(
   {}
 );
 
+if (options.ignore) {
+  let re = options.ignore;
+  if (re.startsWith('/')) re = re.substring(1, re.length - 1);
+  options.ignore = new RegExp(re);
+}
+
 if (method === 'sync') {
   const client = connect(url);
   client.on('error', err => console.error(err));
