@@ -6,7 +6,8 @@ const { connect, share } = require('../');
 const METHODS = ['inspect', 'sync', 'share'];
 const keyMap = {
   '-i': 'ignore',
-  '-d': 'dir'
+  '-d': 'dir',
+  '-s': 'source',
 };
 
 const [method, ...argv] = process.argv.slice(2);
@@ -20,7 +21,7 @@ let url = argv.find(arg => arg.match(/^(tcp:\/\/)?[\w\-\.]+:\d+/));
 if (url) url = url.match(/^tcp:\/\//) ? url : `tcp://${url}`;
 const options = argv.reduce(
   (options, key, index) => {
-    if (key.match(/-i|-d/)) options[keyMap[key]] = argv[index + 1];
+    if (key.match(/-i|-d|-s/)) options[keyMap[key]] = argv[index + 1];
     return options;
   },
   {}
@@ -35,7 +36,7 @@ if (options.ignore) {
 if (method === 'sync') {
   const client = connect(url);
   client.on('error', err => console.error(err));
-  client.on('connect', () => client.sync(options.dir));
+  client.on('connect', () => client.sync(options.dir, options.source));
   client.on('sync', () => console.log(`Synced to remote directory on ${url}`));
 } else if (method === 'inspect') {
   const client = connect(url);
