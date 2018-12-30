@@ -43,7 +43,8 @@ if (method === 'sync') {
   const client = connect(url);
   client.on('error', err => console.error(err));
   client.on('connect', () => client.inspect(hierarchy => {
-    const tree = drawTree(hierarchy);
+    const [dir] = Object.keys(hierarchy);
+    const tree = drawTree(dir, hierarchy);
     console.log(tree);
     client.close();
   }));
