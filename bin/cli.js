@@ -2,6 +2,7 @@
 
 const { parse } = require('url');
 const { connect, share } = require('../');
+const { drawTree } = require('../lib/utils');
 
 const METHODS = ['inspect', 'sync', 'share'];
 const keyMap = {
@@ -41,8 +42,10 @@ if (method === 'sync') {
 } else if (method === 'inspect') {
   const client = connect(url);
   client.on('error', err => console.error(err));
-  client.on('connect', () => client.inspect(inspectedDir => {
-    console.log(inspectedDir);
+  client.on('connect', () => client.inspect(hierarchy => {
+    const [dir] = Object.keys(hierarchy);
+    const tree = drawTree(dir, hierarchy);
+    console.log(tree);
     client.close();
   }));
 } else if (method === 'share') {
